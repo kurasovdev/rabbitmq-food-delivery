@@ -71,7 +71,7 @@ Each microservice performs a single responsibility and communicates asynchronous
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourname/rabbitmq-food-delivery.git
+git clone https://github.com/kurasovdev/rabbitmq-food-delivery.git
 cd rabbitmq-food-delivery
 ```
 
