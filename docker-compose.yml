@@ -56,5 +56,14 @@ services:
     networks:
       - backend
 
+  courier-service:
+    build: ./courier-service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    networks:
+      - backend
+
 networks:
   backend:

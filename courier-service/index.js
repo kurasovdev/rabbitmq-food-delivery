@@ -21,31 +21,29 @@ const connectWithRetry = async () => {
 const run = async () => {
   const conn = await connectWithRetry();
   const ch = await conn.createChannel();
-
   await ch.assertExchange(EXCHANGE, 'topic', { durable: true });
-  const q = await ch.assertQueue('restaurant.queue', { durable: true });
 
-  await ch.bindQueue(q.queue, EXCHANGE, 'order.created');
+  const q = await ch.assertQueue('courier.queue', { durable: true });
+  await ch.bindQueue(q.queue, EXCHANGE, 'order.ready');
 
-    ch.consume(q.queue, async (msg) => {
+  ch.consume(q.queue, (msg) => {
     const order = JSON.parse(msg.content.toString());
-    console.log('Restaurant received order:', order);
+    console.log('Courier received order:', order);
 
-    // simulate 3s cooking time
-    await new Promise((res) => setTimeout(res, 3000));
-
-    const readyEvent = {
-      ...order,
-      readyTime: new Date().toISOString()
+    const courierInfo = {
+      orderId: order.id,
+      courierId: 'c123',
+      status: 'assigned',
+      time: new Date().toISOString(),
     };
 
-    ch.publish(EXCHANGE, 'order.ready', Buffer.from(JSON.stringify(readyEvent)));
-    console.log('Order ready and event published:', readyEvent);
+    ch.publish(EXCHANGE, 'courier.assigned', Buffer.from(JSON.stringify(courierInfo)));
+    console.log('Courier assigned and event published:', courierInfo);
 
     ch.ack(msg);
   });
 
-  console.log('Restaurant service is running...');
+  console.log('Courier service is running...');
 };
 
 run().catch(console.error);

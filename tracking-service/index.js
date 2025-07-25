@@ -23,17 +23,18 @@ const run = async () => {
   const ch = await conn.createChannel();
   await ch.assertExchange(EXCHANGE, 'fanout', { durable: false });
 
-  const position = {
-    courierId: 'c123',
-    lat: 50.45,
-    lon: 30.52,
-    time: new Date().toISOString(),
-  };
+  setInterval(() => {
+    const update = {
+      courierId: 'c123',
+      lat: 50 + Math.random(),
+      lng: 30 + Math.random(),
+      timestamp: new Date().toISOString()
+    };
 
-  ch.publish(EXCHANGE, '', Buffer.from(JSON.stringify(position)));
-  console.log('📍 Courier position sent:', position);
+    ch.publish(EXCHANGE, '', Buffer.from(JSON.stringify(update)));
+    console.log('Tracking update sent:', update);
+  }, 10000);
 
-  setTimeout(() => conn.close(), 500);
 };
 
 run().catch(console.error);

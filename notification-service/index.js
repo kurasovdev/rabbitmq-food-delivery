@@ -29,7 +29,7 @@ const run = async () => {
 
   ch.consume(q.queue, (msg) => {
     const data = JSON.parse(msg.content.toString());
-    console.log('📢 Notification:', data);
+    console.log('Notification:', data);
     ch.ack(msg);
   });
 

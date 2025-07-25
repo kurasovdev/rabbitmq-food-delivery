@@ -31,7 +31,7 @@ const run = async () => {
 
   ch.consume(q.queue, (msg) => {
     const order = JSON.parse(msg.content.toString());
-    console.log('💰 Billing processing:', order);
+    console.log('Billing processing:', order);
     ch.ack(msg);
   });
 
